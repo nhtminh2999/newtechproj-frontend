@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
+import Cookies from 'js-cookie';
+import jsonQuery from 'json-query';
 import { initUserModel } from './Models/User.Model'
 import { User_Service } from './Services/User.Service'
-// import jsonQuery from 'json-query';
 import './css/Login_Signup.css'
 import { API_URL } from '../../config'
 
@@ -12,6 +13,14 @@ class User_Login extends Component {
             isSignUpForm: true,
             userModel: { ...initUserModel },
         };
+    }
+
+    componentDidMount() {
+        const user_name = Cookies.get('user_name');
+        const token = Cookies.get('access_token');
+        if (!!user_name && !!token) {
+            this.props.history.push('/');
+        }
     }
 
     handleFormTypeChange = () => {
@@ -36,7 +45,11 @@ class User_Login extends Component {
         const { userModel } = this.state;
         if (userModel.User_Name !== '' && userModel.User_Password !== '') {
             Promise.all([User_Service.login(userModel)]).then(result => {
-                console.log(result);
+                const user_name = jsonQuery('user[0].User_Name', { data: result }).value;
+                const token = `Bearer ${jsonQuery('token', { data: result }).value}`;
+                Cookies.set('access_token', token, { expires: new Date(Date.now() + 8 * 3600000) });
+                Cookies.set('user_name', user_name, { expires: new Date(Date.now() + 8 * 3600000) });
+                this.props.history.push('/')
             });
         } else {
             console.log('Vui long nhap day du thong tin')

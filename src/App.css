@@ -24,6 +24,21 @@
   color: white;
 }
 
+.ant-picker-input>input {
+  text-align: center;
+}
+
+.button_field {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  margin-top: 10px;
+}
+
+.button_field button+button {
+  margin-left: 10px;
+}
+
 .App-link {
   color: #61dafb;
 }
