@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom'
 import { Layout, Menu } from 'antd'
-import { UserOutlined, ContactsOutlined, BarcodeOutlined } from '@ant-design/icons';
+import { UserOutlined, ContactsOutlined, TeamOutlined } from '@ant-design/icons';
 
 const { Sider } = Layout;
 const { SubMenu } = Menu;
@@ -32,11 +32,11 @@ class Sidebar extends Component {
                             <Link to='/logout'>{'Log out'}</Link>
                         </Menu.Item>
                     </SubMenu>
-                    <Menu.Item key='customer' icon={<ContactsOutlined />}>
+                    <Menu.Item key='customer' icon={<TeamOutlined />}>
                         <Link to='/customer'>{'Customer'}</Link>
                     </Menu.Item>
-                    <Menu.Item key='product' icon={<BarcodeOutlined />}>
-                        <Link to='/product'>{'Product'}</Link>
+                    <Menu.Item key='contact' icon={<ContactsOutlined />}>
+                        <Link to='/contact_history'>{'Contact history'}</Link>
                     </Menu.Item>
                 </Menu>
             </Sider>

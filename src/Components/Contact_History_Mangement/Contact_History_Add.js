@@ -1,66 +1,67 @@
 import React, { Component } from 'react';
 import jsonQuery from 'json-query';
-import { Modal, Button, Form, Input, Card, Radio, DatePicker, message, Select } from 'antd';
+import { Modal, Button, Form, Input, Card, DatePicker, message, Select } from 'antd';
 import { openNotification } from '../Common/MethodCommon'
-import { initCustomerModel } from './Models/Customer.Model'
-import { Customer_Service } from './Services/Customer_Service'
+import { initContactHistoryModel } from './Models/Contact_History.Model'
+import { Contact_History_Service } from './Services/Contact_History.Service'
+import { Customer_Code_Select } from '../Customer_Management/Control/Customer_Code_Select';
 import { User_Select } from '../User_Management/Control/User_Select';
 import moment from 'moment';
 
 const dateFormat = 'DD-MM-YYYY';
 const { Option } = Select;
 
-class Customer_Add extends Component {
+class Contact_History_Add extends Component {
     formRef = React.createRef();
     constructor(props) {
         super(props);
         this.state = {
-            customerModel: { ...initCustomerModel },
+            contactHistoryModel: { ...initContactHistoryModel },
             visible: false,
         }
     }
 
     handleShowModal = () => {
-        const { customerModel } = this.state;
-        customerModel.Customer_Type = 'Individual';
-        customerModel.CreatedBy = this.props.user;
-        customerModel.UpdatedBy = this.props.user;
-        this.setState({ customerModel, visible: true });
+        const { contactHistoryModel } = this.state;
+        contactHistoryModel.CreatedBy = this.props.user;
+        contactHistoryModel.UpdatedBy = this.props.user;
+        this.setState({ visible: true });
     };
 
     handleCancel = () => {
         this.setState({ visible: false });
     };
 
+    handleContactHistoryCustomerChange = value => {
+        const { contactHistoryModel } = this.state;
+        contactHistoryModel.Contact_History_Customer = value;
+        this.setState({ contactHistoryModel });
+    };
+
+
     handleSubmitForm = () => {
         const isValidatedForm = this.formRef.current.validateFields();
         Promise.all([isValidatedForm])
             .then(values => {
-                const { customerModel } = this.state;
-                customerModel.Customer_Fullname = values[0].Customer_FullName;
-                customerModel.Customer_Phonenumber = values[0].Customer_Phonenumber;
-                customerModel.Customer_Birthday = values[0].Customer_Birthday;
-                customerModel.Customer_Email = values[0].Customer_Email;
-                customerModel.Customer_Address = values[0].Customer_Address;
-                customerModel.CreatedBy = values[0].CreatedBy;
-                customerModel.CreatedDate = values[0].CreatedDate;
-                customerModel.UpdatedBy = values[0].UpdatedBy;
-                customerModel.UpdatedDate = values[0].UpdatedDate;
-                customerModel.Status = values[0].Status;
-                Promise.all([Customer_Service.create(customerModel)]).then(result => {
+                const { contactHistoryModel } = this.state;
+                contactHistoryModel.Contact_History_Customer = values[0].Contact_History_Customer;
+                contactHistoryModel.Contact_History_MettingDate = values[0].Contact_History_MettingDate;
+                contactHistoryModel.Contact_History_Content = values[0].Contact_History_Content;
+                contactHistoryModel.CreatedBy = values[0].CreatedBy;
+                contactHistoryModel.CreatedDate = values[0].CreatedDate;
+                contactHistoryModel.UpdatedBy = values[0].UpdatedBy;
+                contactHistoryModel.UpdatedDate = values[0].UpdatedDate;
+                contactHistoryModel.Status = values[0].Status;
+                Promise.all([Contact_History_Service.create(contactHistoryModel)]).then(result => {
                     const data = jsonQuery('message[0]', { data: result }).value;
-                    if (data === 'Email existed') {
-                        message.error('Email existed!');
-                    } else if (data === 'Phone existed') {
-                        message.error('Phone existed!');
-                    } else {
+                    if (data === 'Success') {
                         this.formRef.current.resetFields();
-                        this.props.handleSearch({});
+                        // this.props.handleSearch({});
                         this.setState({
-                            customerModel: { ...initCustomerModel },
+                            contactHistoryModel: { ...initContactHistoryModel },
                             visible: false,
                         });
-                        openNotification('success', 'Add customer successfully!', '');
+                        openNotification('success', 'Add contact history successfully!', '');
                     }
                 })
             })
@@ -69,15 +70,8 @@ class Customer_Add extends Component {
             });
     }
 
-    handleCustomerTypeChange = e => {
-        const { value } = e.target;
-        const { customerModel } = this.state;
-        customerModel.Customer_Type = value;
-        this.setState({ customerModel });
-    };
-
     render() {
-        const { visible, customerModel } = this.state;
+        const { visible, contactHistoryModel } = this.state;
         const formItemLayout = {
             labelCol: {
                 xs: { span: 24, },
@@ -102,7 +96,7 @@ class Customer_Add extends Component {
                 <Modal
                     visible={visible}
                     width='800px'
-                    title={'Add customer information'}
+                    title={'Add contact history'}
                     onCancel={this.handleCancel}
                     footer={[
                         <Button key='back' onClick={this.handleCancel}>
@@ -117,28 +111,18 @@ class Customer_Add extends Component {
                         <Card bordered={false}>
                             <Card.Grid style={gridStyle} hoverable={false}>
                                 <Form.Item
-                                    label='Customer type' colon={false}
-                                >
-                                    <Radio.Group value={customerModel.Customer_Type} name='Customer_Type' onChange={this.handleCustomerTypeChange}>
-                                        <Radio value='Individual'>{'Individual'}</Radio>
-                                        <Radio value='Enterprise'>{'Enterprise'}</Radio>
-                                    </Radio.Group>
-                                </Form.Item>
-                            </Card.Grid>
-                            <Card.Grid style={gridStyle} hoverable={false}>
-                                <Form.Item
-                                    name='Customer_FullName' hasFeedback={true}
-                                    label='Fullname' colon={false}
+                                    name='Contact_History_Customer' hasFeedback={true}
+                                    label='Customer' colon={false}
                                     required={false}
-                                    rules={[{ required: true, message: 'Please enter fullname!' }]}
+                                    rules={[{ required: true, message: 'Please select customer!' }]}
                                 >
-                                    <Input placeholder='Fullname' />
+                                    <Customer_Code_Select onChange={this.handleContactHistoryCustomerChange} p />
                                 </Form.Item>
                             </Card.Grid>
                             <Card.Grid style={gridStyle} hoverable={false}>
                                 <Form.Item
-                                    name='Customer_Birthday' hasFeedback={true}
-                                    label='Day of birth' colon={false}
+                                    name='Contact_History_MettingDate' hasFeedback={true}
+                                    label='Meeting date' colon={false}
                                     required={false}
                                     rules={[{ required: true, message: 'Please select!' }]}
                                     initialValue={moment(new Date())}
@@ -148,47 +132,18 @@ class Customer_Add extends Component {
                             </Card.Grid>
                             <Card.Grid style={gridStyle} hoverable={false}>
                                 <Form.Item
-                                    name='Customer_Phonenumber' hasFeedback={true}
-                                    label='Phone number' colon={false}
+                                    name='Contact_History_Content' hasFeedback={true}
+                                    label='Content' colon={false}
                                     required={false}
-                                    rules={[{ required: true, message: 'Please input phone number!' }]}
+                                    rules={[{ required: true, message: 'Please enter content!' }]}
                                 >
-                                    <Input placeholder='Phone number' />
-                                </Form.Item>
-                            </Card.Grid>
-                            <Card.Grid style={gridStyle} hoverable={false}>
-                                <Form.Item
-                                    name='Customer_Email' hasFeedback={true}
-                                    label='Email' colon={false}
-                                    required={false}
-                                    rules={[
-                                        {
-                                            type: 'email',
-                                            message: 'The input is not valid E-mail!',
-                                        },
-                                        {
-                                            required: true,
-                                            message: 'Please enter  E-mail!',
-                                        },
-                                    ]}
-                                >
-                                    <Input placeholder='Email' />
-                                </Form.Item>
-                            </Card.Grid>
-                            <Card.Grid style={gridStyle} hoverable={false}>
-                                <Form.Item
-                                    name='Customer_Address' hasFeedback={true}
-                                    label='Address' colon={false}
-                                    required={false}
-                                    rules={[{ required: true, message: 'Please enter customer address!' }]}
-                                >
-                                    <Input placeholder='Address' />
+                                    <Input.TextArea autoSize={{ minRows: 1, maxRows: 10 }} placeholder='Content' />
                                 </Form.Item>
                             </Card.Grid>
                             <Card.Grid style={gridStyle} hoverable={false}>
                                 <Form.Item
                                     name='CreatedBy' hasFeedback={true}
-                                    label='Created by' colon={false} initialValue={customerModel.CreatedBy}
+                                    label='Created by' colon={false} initialValue={contactHistoryModel.CreatedBy}
                                 >
                                     <User_Select disabled={true} />
                                 </Form.Item>
@@ -205,7 +160,7 @@ class Customer_Add extends Component {
                             <Card.Grid style={gridStyle} hoverable={false}>
                                 <Form.Item
                                     name='UpdatedBy' hasFeedback={true}
-                                    label='Updated by' colon={false} initialValue={customerModel.UpdatedBy}
+                                    label='Updated by' colon={false} initialValue={contactHistoryModel.UpdatedBy}
                                 >
                                     <User_Select disabled={true} />
                                 </Form.Item>
@@ -241,5 +196,4 @@ class Customer_Add extends Component {
     }
 }
 
-export { Customer_Add };
-
+export { Contact_History_Add };
