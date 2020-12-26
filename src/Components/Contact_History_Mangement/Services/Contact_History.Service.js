@@ -2,6 +2,7 @@ import { API_URL } from '../../../config';
 
 export const Contact_History_Service = {
     search,
+    getDataFilter,
     create,
     update,
     deleteModels
@@ -16,6 +17,17 @@ function search(searchModel) {
         body: JSON.stringify(searchModel)
     };
     return fetch(`${API_URL}/Contact_History/search`, requestOptions).then(handleResponse);
+}
+
+function getDataFilter(searchModel) {
+    const headers = new Headers();
+    headers.append('Content-Type', 'application/json');
+    const requestOptions = {
+        headers,
+        method: 'POST',
+        body: JSON.stringify(searchModel)
+    };
+    return fetch(`${API_URL}/Contact_History/getDataFilter`, requestOptions).then(handleResponse);
 }
 
 function create(contactHistoryModel) {

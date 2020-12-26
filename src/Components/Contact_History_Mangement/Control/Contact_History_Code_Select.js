@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
-import { Customer_Service } from '../Services/Customer.Service'
+import { Contact_History_Service } from '../Services/Contact_History.Service'
 import jsonQuery from 'json-query';
 import { Select } from 'antd';
 
 const { Option } = Select;
 
-class Customer_Fullname_Select extends Component {
+class Contact_History_Code_Select extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -15,10 +15,8 @@ class Customer_Fullname_Select extends Component {
 
     componentDidMount() {
         const searchModel = { Value: '' };
-        Promise.all([Customer_Service.getDataFilter(searchModel)]).then(result => {
+        Promise.all([Contact_History_Service.getDataFilter(searchModel)]).then(result => {
             const data = jsonQuery('result', { data: result }).value;
-            console.log(data);
-
             this.setState({ dataSource: data });
         })
     }
@@ -29,7 +27,7 @@ class Customer_Fullname_Select extends Component {
 
     onSearch = value => {
         const searchModel = { Value: value };
-        Promise.all([Customer_Service.getDataFilter(searchModel)]).then(result => {
+        Promise.all([Contact_History_Service.getDataFilter(searchModel)]).then(result => {
             const data = jsonQuery('result', { data: result }).value;
             this.setState({ dataSource: data });
         })
@@ -46,6 +44,7 @@ class Customer_Fullname_Select extends Component {
                 onChange={this.onChange}
                 onSearch={this.onSearch}
                 value={this.props.value}
+                optionLabelProp='value'
                 filterOption={(input, option) =>
                     option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
                     || option.value.toLowerCase().indexOf(input.toLowerCase()) >= 0
@@ -53,7 +52,7 @@ class Customer_Fullname_Select extends Component {
             >
                 {(!!dataSource && dataSource.length > 0) &&
                     dataSource.map(data =>
-                        <Option key={data._id} value={data.Customer_Fullname}>{data.Customer_Fullname}</Option>
+                        <Option key={data._id} value={data.Contact_History_Code}>{data.Contact_History_Code}</Option>
                     )
                 }
             </Select>
@@ -61,4 +60,4 @@ class Customer_Fullname_Select extends Component {
     }
 }
 
-export { Customer_Fullname_Select };
+export { Contact_History_Code_Select };

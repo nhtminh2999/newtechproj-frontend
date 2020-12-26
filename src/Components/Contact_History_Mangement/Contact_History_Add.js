@@ -23,8 +23,8 @@ class Contact_History_Add extends Component {
 
     handleShowModal = () => {
         const { contactHistoryModel } = this.state;
-        contactHistoryModel.CreatedBy = this.props.user;
-        contactHistoryModel.UpdatedBy = this.props.user;
+        contactHistoryModel.CreatedBy = this.props.userId;
+        contactHistoryModel.UpdatedBy = this.props.userId;
         this.setState({ visible: true });
     };
 
@@ -56,7 +56,7 @@ class Contact_History_Add extends Component {
                     const data = jsonQuery('message[0]', { data: result }).value;
                     if (data === 'Success') {
                         this.formRef.current.resetFields();
-                        // this.props.handleSearch({});
+                        this.props.handleSearch({});
                         this.setState({
                             contactHistoryModel: { ...initContactHistoryModel },
                             visible: false,

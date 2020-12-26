@@ -3,7 +3,7 @@ import jsonQuery from 'json-query';
 import { Modal, Button, Form, Input, Card, Radio, DatePicker, message, Select } from 'antd';
 import { openNotification } from '../Common/MethodCommon'
 import { initCustomerModel } from './Models/Customer.Model'
-import { Customer_Service } from './Services/Customer_Service'
+import { Customer_Service } from './Services/Customer.Service'
 import { User_Select } from '../User_Management/Control/User_Select';
 import moment from 'moment';
 
@@ -31,7 +31,7 @@ class Customer_Update extends Component {
             return;
         } else {
             const customerModel = selectedModel[0];
-            customerModel.UpdatedBy = this.props.user;
+            customerModel.UpdatedBy = this.props.userId;
             this.setState({ customerModel, visible: true });
             this.formRef.current.setFieldsValue({
                 Customer_FullName: customerModel.Customer_Fullname,

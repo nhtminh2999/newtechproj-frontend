@@ -1,10 +1,13 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 import Cookies from 'js-cookie';
 import jsonQuery from 'json-query';
+import { UserOutlined, LockOutlined } from '@ant-design/icons';
+import { Form, Input, Button } from 'antd';
 import { initUserModel } from './Models/User.Model'
 import { User_Service } from './Services/User.Service'
-import './css/Login_Signup.css'
 import { API_URL } from '../../config'
+import './css/Login_Signup.css'
 
 class User_Login extends Component {
     constructor(props) {
@@ -45,10 +48,10 @@ class User_Login extends Component {
         const { userModel } = this.state;
         if (userModel.User_Name !== '' && userModel.User_Password !== '') {
             Promise.all([User_Service.login(userModel)]).then(result => {
-                const user_name = jsonQuery('user[0].User_Name', { data: result }).value;
+                const userId = jsonQuery('user[0]._id', { data: result }).value;
                 const token = `Bearer ${jsonQuery('token', { data: result }).value}`;
                 Cookies.set('access_token', token, { expires: new Date(Date.now() + 8 * 3600000) });
-                Cookies.set('user_name', user_name, { expires: new Date(Date.now() + 8 * 3600000) });
+                Cookies.set('user_id', userId, { expires: new Date(Date.now() + 8 * 3600000) });
                 this.props.history.push('/')
             });
         } else {
@@ -57,88 +60,63 @@ class User_Login extends Component {
     }
     render() {
         return (
-            <div className={`${(this.state.isSignUpForm === true ? 'container' : 'container sign-up-mode')}`}>
-                <div className="form-container">
-                    <div className="signin-signup">
-                        <form className='sign-in-form'>
-                            <h2 className="title">Sign in</h2>
-                            <div className="input-field">
-                                <i className="fas fa-user"></i>
-                                <input onChange={this.handleUserNameChange} type='text' placeholder="Username" />
-
-                            </div>
-                            <div className="input-field">
-                                <i className="fas fa-lock"></i>
-                                <input onChange={this.handlePasswordChange} type='password' placeholder="Password" />
-                            </div>
-                            <input onClick={this.handleSubmitLoginForm} type="submit" value="Login" className='btn solid' />
-
-                            <p className="social-text">Or Sign in with social platforms</p>
-                            <div className="social-media">
-                                <a href="#" className='social-icon'>
-                                    <i className="fab fa-facebook-f"></i>
-                                </a>
-                                <a href={`${API_URL}/User/google`} className='social-icon'>
-                                    <i className="fab fa-google"></i>
-                                </a>
-                            </div>
-                        </form>
-
-                        <form className='sign-up-form'>
-                            <h2 className="title">Sign up</h2>
-                            <div className="input-field">
-                                <i className="fas fa-user"></i>
-                                <input type='text' placeholder="Fullname" />
-                            </div>
-                            <div className="input-field">
-                                <i className="fas fa-user"></i>
-                                <input type='text' placeholder="Username" />
-                            </div>
-                            <div className="input-field">
-                                <i className="fas fa-lock"></i>
-                                <input type='password' placeholder="Password" />
-                            </div>
-                            <input onClick={this.handleSubmitLoginForm} type="submit" value="Sign up" className='btn solid' />
-
-                            <p className="social-text">Or Sign up with social platforms</p>
-                            <div className="social-media">
-                                <a href="#" className='social-icon'>
-                                    <i className="fab fa-facebook-f"></i>
-                                </a>
-                                <a href="#" className='social-icon'>
-                                    <i className="fab fa-google"></i>
-                                </a>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-
-                <div className="panels-container">
-                    <div className="panel left-panel">
-                        <div className="content">
-                            <h3>New here ?</h3>
-                            <p>
-                                Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                                Natus temporibus autem, neque at quidem aperiam sint suscipit libero, minus repellendus,
-                                fuga laboriosam facilis omnis provident adipisci! Assumenda labore enim atque.
-                                 </p>
-                            <button className="btn transparent" onClick={this.handleFormTypeChange} id='sign-up-btn'>Sign up</button>
-                        </div>
-                        <img src="" className='image' alt="" />
-                    </div>
-                    <div className="panel right-panel">
-                        <div className="content">
-                            <h3>One of us ?</h3>
-                            <p>
-                                Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                                Natus temporibus autem, neque at quidem aperiam sint suscipit libero, minus repellendus,
-                                fuga laboriosam facilis omnis provident adipisci! Assumenda labore enim atque.
-                                 </p>
-                            <button className="btn transparent" onClick={this.handleFormTypeChange} id='sign-in-btn'>Sign in</button>
-                        </div>
-                        <img src="" className='image' alt="" />
-                    </div>
-                </div>
+            <div className='container'>
+                <Form
+                    name='normal_login'
+                    className='login-form'
+                >
+                    <Form.Item
+                        name='username'
+                        rules={[
+                            {
+                                required: true,
+                                message: 'Please input your Username!',
+                            },
+                        ]}
+                    >
+                        <Input prefix={<UserOutlined className='site-form-item-icon' />} placeholder='Username' />
+                    </Form.Item>
+                    <Form.Item
+                        name='password'
+                        rules={[
+                            {
+                                required: true,
+                                message: 'Please input your Password!',
+                            },
+                        ]}
+                    >
+                        <Input
+                            prefix={<LockOutlined className='site-form-item-icon' />}
+                            type='password'
+                            placeholder='Password'
+                        />
+                    </Form.Item>
+                    <Form.Item>
+                        <Button type='primary' htmlType='submit' className='login-form-button'>
+                            {'Log In'}
+                        </Button>
+                    </Form.Item>
+                    <Form.Item>
+                        <a href={`${API_URL}/User/google`}>
+                            <Button type='primary' className='login-form-google-button'>
+                                <span className='social-icon'>
+                                    <i className='fab fa-google' style={{ width: '24px' }}></i>
+                                </span>
+                                {'Log in with Google'}
+                            </Button>
+                        </a>
+                    </Form.Item>
+                    <Form.Item>
+                        <a href={`${API_URL}/User/google`}>
+                            <Button type='primary' className='login-form-facebook-button'>
+                                <span className='social-icon'>
+                                    <i className='fab fa-facebook-f' style={{ width: '24px' }}></i>
+                                </span>
+                                {'Log in with Facebook'}
+                            </Button>
+                        </a>
+                    </Form.Item>
+                </Form>
             </div>
         );
     }

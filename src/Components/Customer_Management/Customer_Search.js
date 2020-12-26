@@ -99,16 +99,9 @@ class Customer_Search extends Component {
                         <Card bordered={false}>
                             <Card.Grid style={gridStyle} hoverable={false}>
                                 <Form.Item
-                                    label='Customer code' colon={false}
+                                    label='Customer' colon={false}
                                 >
                                     <Customer_Code_Select onChange={this.handleCustomerCodeChange} />
-                                </Form.Item>
-                            </Card.Grid>
-                            <Card.Grid style={gridStyle} hoverable={false}>
-                                <Form.Item
-                                    label='Fullname' colon={false}
-                                >
-                                    <Customer_Fullname_Select onChange={this.handleCustomerFullnameChange} />
                                 </Form.Item>
                             </Card.Grid>
                             <Card.Grid style={gridStyle} hoverable={false}>
@@ -127,7 +120,7 @@ class Customer_Search extends Component {
                             </Card.Grid>
                             <Card.Grid style={gridStyle} hoverable={false}>
                                 <Form.Item
-                                    label='Phone number' colon={false}
+                                    label='Phone Number' colon={false}
                                 >
                                     <Input allowClear name='Customer_Phonenumber' onChange={this.handleInputChange} placeholder='Phone number' />
                                 </Form.Item>
@@ -149,14 +142,14 @@ class Customer_Search extends Component {
                             <Card.Grid style={gridStyle} hoverable={false}>
                                 <Form.Item
                                     name='CreatedBy'
-                                    label='Created by' colon={false}
+                                    label='Created By' colon={false}
                                 >
                                     <User_Select onChange={this.handleCreatedByChange} />
                                 </Form.Item>
                             </Card.Grid>
                             <Card.Grid style={gridStyle} hoverable={false}>
                                 <Form.Item
-                                    label='Created day' colon={false}
+                                    label='Created Date' colon={false}
                                 >
                                     <RangePicker
                                         style={{ width: '100%' }}
@@ -171,14 +164,14 @@ class Customer_Search extends Component {
                             <Card.Grid style={gridStyle} hoverable={false}>
                                 <Form.Item
                                     name='UpdatedBy'
-                                    label='Updated by' colon={false}
+                                    label='Updated By' colon={false}
                                 >
                                     <User_Select onChange={this.handleUpdatedByChange} />
                                 </Form.Item>
                             </Card.Grid>
                             <Card.Grid style={gridStyle} hoverable={false}>
                                 <Form.Item
-                                    label='Updated day' colon={false}
+                                    label='Updated Date' colon={false}
                                 >
                                     <RangePicker
                                         style={{ width: '100%' }}

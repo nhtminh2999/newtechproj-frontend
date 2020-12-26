@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Customer_Service } from '../Services/Customer_Service'
+import { Customer_Service } from '../Services/Customer.Service'
 import jsonQuery from 'json-query';
 import { Select } from 'antd';
 
@@ -22,6 +22,7 @@ class Customer_Code_Select extends Component {
     }
 
     onChange = value => {
+        console.log(value);
         this.props.onChange(value);
     }
 
@@ -44,7 +45,7 @@ class Customer_Code_Select extends Component {
                 onChange={this.onChange}
                 onSearch={this.onSearch}
                 value={this.props.value}
-                optionLabelProp='value'
+                optionLabelProp='name'
                 filterOption={(input, option) =>
                     option.value.toLowerCase().indexOf(input.toLowerCase()) >= 0 ||
                     option.children.props.children[0].props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0 ||
@@ -53,7 +54,7 @@ class Customer_Code_Select extends Component {
             >
                 {(!!dataSource && dataSource.length > 0) &&
                     dataSource.map(data =>
-                        <Option key={data._id} value={data.Customer_Code}>
+                        <Option key={data._id} value={data.Customer_Code} name={data.Customer_Fullname}>
                             <div>
                                 <span >{data.Customer_Code}</span>
                                 <span style={{ float: 'right' }}>{data.Customer_Fullname}</span>

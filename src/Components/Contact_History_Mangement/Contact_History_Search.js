@@ -1,8 +1,11 @@
 import React, { Component } from 'react';
 import { Collapse, Input, Card, DatePicker, Form } from 'antd';
-import { Contact_Code_Select } from '../Contact_Management/Control/Contact_Code_Select';
+import { Contact_History_Code_Select } from './Control/Contact_History_Code_Select';
 import { User_Select } from '../User_Management/Control/User_Select'
 import moment from 'moment';
+
+const { RangePicker } = DatePicker;
+const { Panel } = Collapse;
 
 class Contact_History_Search extends Component {
     formRef = React.createRef();
@@ -83,14 +86,14 @@ class Contact_History_Search extends Component {
                         <Card bordered={false}>
                             <Card.Grid style={gridStyle} hoverable={false}>
                                 <Form.Item
-                                    label='Contact code' colon={false}
+                                    label='Contact Code' colon={false}
                                 >
-                                    <Contact_Code_Select onChange={this.handleContactCodeChange} />
+                                    <Contact_History_Code_Select onChange={this.handleContactCodeChange} />
                                 </Form.Item>
                             </Card.Grid>
                             <Card.Grid style={gridStyle} hoverable={false}>
                                 <Form.Item
-                                    label='Meeting date' colon={false}
+                                    label='Meeting Date' colon={false}
                                 >
                                     <RangePicker
                                         style={{ width: '100%' }}
@@ -105,14 +108,14 @@ class Contact_History_Search extends Component {
                             <Card.Grid style={gridStyle} hoverable={false}>
                                 <Form.Item
                                     name='CreatedBy'
-                                    label='Created by' colon={false}
+                                    label='Created By' colon={false}
                                 >
                                     <User_Select onChange={this.handleCreatedByChange} />
                                 </Form.Item>
                             </Card.Grid>
                             <Card.Grid style={gridStyle} hoverable={false}>
                                 <Form.Item
-                                    label='Created day' colon={false}
+                                    label='Created Date' colon={false}
                                 >
                                     <RangePicker
                                         style={{ width: '100%' }}
@@ -127,14 +130,14 @@ class Contact_History_Search extends Component {
                             <Card.Grid style={gridStyle} hoverable={false}>
                                 <Form.Item
                                     name='UpdatedBy'
-                                    label='Updated by' colon={false}
+                                    label='Updated By' colon={false}
                                 >
                                     <User_Select onChange={this.handleUpdatedByChange} />
                                 </Form.Item>
                             </Card.Grid>
                             <Card.Grid style={gridStyle} hoverable={false}>
                                 <Form.Item
-                                    label='Updated day' colon={false}
+                                    label='Updated Date' colon={false}
                                 >
                                     <RangePicker
                                         style={{ width: '100%' }}
@@ -154,4 +157,5 @@ class Contact_History_Search extends Component {
     }
 }
 
-export default Contact_History_Search;
+export { Contact_History_Search };
+

@@ -3,7 +3,7 @@ import jsonQuery from 'json-query';
 import { Modal, Button, Form, Input, Card, Radio, DatePicker, message, Select } from 'antd';
 import { openNotification } from '../Common/MethodCommon'
 import { initCustomerModel } from './Models/Customer.Model'
-import { Customer_Service } from './Services/Customer_Service'
+import { Customer_Service } from './Services/Customer.Service'
 import { User_Select } from '../User_Management/Control/User_Select';
 import moment from 'moment';
 
@@ -23,8 +23,9 @@ class Customer_Add extends Component {
     handleShowModal = () => {
         const { customerModel } = this.state;
         customerModel.Customer_Type = 'Individual';
-        customerModel.CreatedBy = this.props.user;
-        customerModel.UpdatedBy = this.props.user;
+        customerModel.CreatedBy = this.props.userId;
+        console.log(this.props.userId)
+        customerModel.UpdatedBy = this.props.userId;
         this.setState({ customerModel, visible: true });
     };
 

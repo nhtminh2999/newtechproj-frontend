@@ -9,7 +9,7 @@ import { Customer_Add } from './Customer_Add';
 import { Customer_Update } from './Customer_Update'
 import { Customer_Search } from './Customer_Search';
 import { initSearchModel, columns } from './Models/Customer.Model'
-import { Customer_Service } from './Services/Customer_Service'
+import { Customer_Service } from './Services/Customer.Service'
 
 const { Content, Footer } = Layout;
 const { confirm } = Modal;
@@ -22,19 +22,19 @@ class Customer_List extends Component {
             dataSource: [],
             selectedModel: [],
             listDelete: [],
-            user: '',
+            userId: '',
             token: '',
         }
     }
 
     componentDidMount() {
         const { searchModel } = this.state;
-        const user = Cookies.get('user_name');
+        const userId = Cookies.get('user_id');
         const token = Cookies.get('access_token');
-        if (!user && !token) {
+        if (!userId && !token) {
             this.props.history.push('/login');
         }
-        this.setState({ user, token });
+        this.setState({ userId, token });
         this.handleSearch(searchModel);
     }
 
@@ -56,9 +56,7 @@ class Customer_List extends Component {
 
     showDeleteItemConfirm = (handleSearch) => {
         const { listDelete, selectedModel } = this.state;
-        selectedModel.forEach(s => {
-            listDelete.push(s.Customer_Code);
-        });
+        selectedModel.forEach(s => listDelete.push(s.Customer_Code));
         if (listDelete.length === 0) {
             openNotification('error', 'Please select data !', '');
             return;
@@ -82,7 +80,7 @@ class Customer_List extends Component {
     }
 
     render() {
-        const { dataSource, searchModel, selectedModel, user, token } = this.state;
+        const { dataSource, searchModel, selectedModel, userId, token } = this.state;
         const pagination = {
             position: ['bottomLeft'],
             showQuickJumper: true,
@@ -117,12 +115,12 @@ class Customer_List extends Component {
 
                                 {/* Add button */}
                                 <Customer_Add handleSearch={this.handleSearch}
-                                    user={user} token={token} />
+                                    userId={userId} token={token} />
 
                                 {/* Update button */}
                                 <Customer_Update handleSearch={this.handleSearch}
                                     selectedModel={selectedModel}
-                                    user={user} token={token} />
+                                    userId={userId} token={token} />
 
                                 {/* Delete button */}
                                 <Button type='primary' onClick={() => this.showDeleteItemConfirm(this.handleSearch)}>{'Delete'}</Button>

@@ -53,7 +53,7 @@ class User_Select extends Component {
             >
                 {(!!dataSource && dataSource.length > 0) &&
                     dataSource.map(data =>
-                        <Option key={data._id} value={data.User_Name}>{data.User_Fullname}</Option>
+                        <Option key={data._id} value={data._id}>{data.User_Fullname}</Option>
                     )
                 }
             </Select>
