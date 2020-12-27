@@ -1,15 +1,15 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
 import Cookies from 'js-cookie';
 import jsonQuery from 'json-query';
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
-import { Form, Input, Button } from 'antd';
+import { Form, Input, Button, message } from 'antd';
 import { initUserModel } from './Models/User.Model'
 import { User_Service } from './Services/User.Service'
 import { API_URL } from '../../config'
 import './css/Login_Signup.css'
 
 class User_Login extends Component {
+    formRef = React.createRef();
     constructor(props) {
         super(props);
         this.state = {
@@ -19,9 +19,9 @@ class User_Login extends Component {
     }
 
     componentDidMount() {
-        const user_name = Cookies.get('user_name');
+        const userId = Cookies.get('user_id');
         const token = Cookies.get('access_token');
-        if (!!user_name && !!token) {
+        if (!!userId && !!token) {
             this.props.history.push('/');
         }
     }
@@ -43,26 +43,30 @@ class User_Login extends Component {
         this.setState({ userModel });
     }
 
-    handleSubmitLoginForm = e => {
-        e.preventDefault();
+    handleSubmitLoginForm = () => {
         const { userModel } = this.state;
-        if (userModel.User_Name !== '' && userModel.User_Password !== '') {
+        const isValidatedForm = this.formRef.current.validateFields();
+        Promise.all([isValidatedForm]).then(() => {
             Promise.all([User_Service.login(userModel)]).then(result => {
+                if (!!result[0].error) {
+                    return message.error('Wrong Username or Password!');
+                }
                 const userId = jsonQuery('user[0]._id', { data: result }).value;
                 const token = `Bearer ${jsonQuery('token', { data: result }).value}`;
                 Cookies.set('access_token', token, { expires: new Date(Date.now() + 8 * 3600000) });
                 Cookies.set('user_id', userId, { expires: new Date(Date.now() + 8 * 3600000) });
                 this.props.history.push('/')
+
             });
-        } else {
-            console.log('Vui long nhap day du thong tin')
-        }
+        });
     }
     render() {
         return (
             <div className='container'>
                 <Form
+                    ref={this.formRef}
                     name='normal_login'
+                    onFinish={this.handleSubmitLoginForm}
                     className='login-form'
                 >
                     <Form.Item
@@ -74,7 +78,7 @@ class User_Login extends Component {
                             },
                         ]}
                     >
-                        <Input prefix={<UserOutlined className='site-form-item-icon' />} placeholder='Username' />
+                        <Input onChange={this.handleUserNameChange} prefix={<UserOutlined className='site-form-item-icon' />} placeholder='Username' />
                     </Form.Item>
                     <Form.Item
                         name='password'
@@ -86,6 +90,7 @@ class User_Login extends Component {
                         ]}
                     >
                         <Input
+                            onChange={this.handlePasswordChange}
                             prefix={<LockOutlined className='site-form-item-icon' />}
                             type='password'
                             placeholder='Password'
@@ -107,7 +112,7 @@ class User_Login extends Component {
                         </a>
                     </Form.Item>
                     <Form.Item>
-                        <a href={`${API_URL}/User/google`}>
+                        <a href={`${API_URL}/User/facebook`}>
                             <Button type='primary' className='login-form-facebook-button'>
                                 <span className='social-icon'>
                                     <i className='fab fa-facebook-f' style={{ width: '24px' }}></i>

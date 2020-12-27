@@ -38,6 +38,13 @@ class Customer_List extends Component {
         this.handleSearch(searchModel);
     }
 
+    componentWillUnmount() {
+        // fix Warning: Can't perform a React state update on an unmounted component
+        this.setState = (state, callback) => {
+            return;
+        };
+    }
+
     handleSearch = (searchModel) => {
         Promise.all([Customer_Service.search(searchModel)]).then(result => {
             const data = jsonQuery('result', { data: result }).value;

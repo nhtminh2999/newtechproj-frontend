@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom'
 import { Layout, Menu } from 'antd'
 import { UserOutlined, ContactsOutlined, TeamOutlined } from '@ant-design/icons';
+import { API_URL } from '../../config'
 
 const { Sider } = Layout;
 const { SubMenu } = Menu;
@@ -25,15 +26,12 @@ class Sidebar extends Component {
             <Sider collapsible collapsed={collapsed} onCollapse={this.onCollapse}>
                 <Menu theme='dark' defaultSelectedKeys={defaultSelectedKeys} mode='inline'>
                     <SubMenu key='user' icon={<UserOutlined />} title='User'>
-                        <Menu.Item key='profile'>
-                            <Link to='/:username/profile'>{'Profile'}</Link>
-                        </Menu.Item>
                         <Menu.Item key='logout'>
-                            <Link to='/logout'>{'Log out'}</Link>
+                            <a href={`${API_URL}/User/logout`} >{'Log out'}</a>
                         </Menu.Item>
                     </SubMenu>
                     <Menu.Item key='customer' icon={<TeamOutlined />}>
-                        <Link to='/customer'>{'Customer'}</Link>
+                        <Link to='/'>{'Customer'}</Link>
                     </Menu.Item>
                     <Menu.Item key='contact' icon={<ContactsOutlined />}>
                         <Link to='/contact_history'>{'Contact history'}</Link>

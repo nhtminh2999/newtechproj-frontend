@@ -21,6 +21,13 @@ class Contact_History_Code_Select extends Component {
         })
     }
 
+    componentWillUnmount() {
+        // fix Warning: Can't perform a React state update on an unmounted component
+        this.setState = (state, callback) => {
+            return;
+        };
+    }
+
     onChange = value => {
         this.props.onChange(value);
     }
