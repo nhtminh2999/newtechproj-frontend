@@ -2,6 +2,7 @@ import { API_URL } from '../../../config';
 
 export const User_Service = {
     login,
+    register,
     getDataFilter,
 }
 
@@ -14,6 +15,17 @@ function login(userModel) {
         body: JSON.stringify(userModel)
     };
     return fetch(`${API_URL}/User/login`, requestOptions).then(handleResponse);
+}
+
+function register(userModel) {
+    const headers = new Headers();
+    headers.append('Content-Type', 'application/json');
+    const requestOptions = {
+        headers,
+        method: 'POST',
+        body: JSON.stringify(userModel)
+    };
+    return fetch(`${API_URL}/User/create`, requestOptions).then(handleResponse);
 }
 
 function getDataFilter(searchModel) {

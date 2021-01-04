@@ -13,7 +13,6 @@ class User_Login extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            isSignUpForm: true,
             userModel: { ...initUserModel },
         };
     }
@@ -21,15 +20,10 @@ class User_Login extends Component {
     componentDidMount() {
         const userId = Cookies.get('user_id');
         const token = Cookies.get('access_token');
-        if (!!userId && !!token) {
+        if (userId && token) {
             this.props.history.push('/');
         }
     }
-
-    handleFormTypeChange = () => {
-        const isSignUpForm = !this.state.isSignUpForm;
-        this.setState({ isSignUpForm });
-    };
 
     handleUserNameChange = e => {
         const { userModel } = this.state;
@@ -52,8 +46,10 @@ class User_Login extends Component {
                     return message.error('Wrong Username or Password!');
                 }
                 const userId = jsonQuery('user[0]._id', { data: result }).value;
+                const userFullName = jsonQuery('user[0].User_Fullname', { data: result }).value;
                 const token = `Bearer ${jsonQuery('token', { data: result }).value}`;
                 Cookies.set('access_token', token, { expires: new Date(Date.now() + 8 * 3600000) });
+                Cookies.set('user_fullname', userFullName, { expires: new Date(Date.now() + 8 * 3600000) });
                 Cookies.set('user_id', userId, { expires: new Date(Date.now() + 8 * 3600000) });
                 this.props.history.push('/')
 
@@ -120,6 +116,7 @@ class User_Login extends Component {
                                 {'Log in with Facebook'}
                             </Button>
                         </a>
+                        Or <a href='/register'>register now!</a>
                     </Form.Item>
                 </Form>
             </div>

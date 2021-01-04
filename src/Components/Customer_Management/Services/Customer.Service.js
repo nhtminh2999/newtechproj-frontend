@@ -1,4 +1,5 @@
 import { API_URL } from '../../../config';
+import Cookies from 'js-cookie';
 
 export const Customer_Service = {
     search,
@@ -10,6 +11,8 @@ export const Customer_Service = {
 
 function search(searchModel) {
     const headers = new Headers();
+    const token = Cookies.get('access_token');
+    headers.append('Authorization', token);
     headers.append('Content-Type', 'application/json');
     const requestOptions = {
         headers,
@@ -32,6 +35,8 @@ function getDataFilter(searchModel) {
 
 function create(customerModel) {
     const headers = new Headers();
+    const token = Cookies.get('access_token');
+    headers.append('Authorization', token);
     headers.append('Content-Type', 'application/json');
     const requestOptions = {
         headers,
@@ -43,6 +48,8 @@ function create(customerModel) {
 
 function update(customerModel) {
     const headers = new Headers();
+    const token = Cookies.get('access_token');
+    headers.append('Authorization', token);
     headers.append('Content-Type', 'application/json');
     const requestOptions = {
         headers,
@@ -54,6 +61,8 @@ function update(customerModel) {
 
 function deleteModels(listDelete) {
     const headers = new Headers();
+    const token = Cookies.get('access_token');
+    headers.append('Authorization', token);
     headers.append('Content-Type', 'application/json');
     const requestOptions = {
         headers,
@@ -69,8 +78,9 @@ function handleResponse(response) {
         const data = text && JSON.parse(text);
         if (!response.ok) {
             if (response.status === responseStatusCode) {
-                // auto logout if 401 response returned from api
-                //logout();
+                Cookies.remove('access_token');
+                Cookies.remove('user_id');
+                Cookies.remove('user_fullname');
                 window.location.reload(true);
             }
             const error = (data && data.message) || response.statusText;
